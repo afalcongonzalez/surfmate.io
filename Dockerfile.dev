@@ -1,0 +1,31 @@
+# Development Dockerfile with hot reload
+FROM golang:1.23-alpine
+
+WORKDIR /app
+
+# Install development tools
+RUN apk add --no-cache \
+    git \
+    chromium \
+    chromium-chromedriver \
+    ca-certificates
+
+# Install air for hot reload (pinned to Go 1.23 compatible version)
+RUN go install github.com/air-verse/air@v1.61.7
+
+# Set environment variables
+ENV BROWSER_PATH=/usr/bin/chromium-browser
+ENV CHROME_BIN=/usr/bin/chromium-browser
+ENV CHROMIUM_FLAGS="--no-sandbox --disable-dev-shm-usage --headless"
+
+# Copy go mod files first for caching
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Copy air config if exists, otherwise use default
+COPY . .
+
+EXPOSE 8080
+
+# Use air for hot reload in development
+CMD ["air", "-c", ".air.toml"]
