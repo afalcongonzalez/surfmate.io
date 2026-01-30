@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Surfmate.io - Browser Automation for AI</title>
+  <meta name="description" content="Let AI browse the web for you. MCP server that opens a visible browser for captchas and logins while AI controls navigation.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">surfmate<span>.io</span></div>
+      <nav class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#install">Install</a>
+        <a href="#setup">Setup</a>
+        <a href="https://github.com/afalcongonzalez/surfmate.io" class="github-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          GitHub
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="badge">MCP Protocol</div>
+        <h1>Let AI <span class="gradient">browse the web</span> for you</h1>
+        <p class="subtitle">Browser automation that works with Claude. Opens a visible window so you can handle captchas and logins while AI controls everything else.</p>
+
+        <div class="install-command" id="install-command">
+          <div class="command-header">
+            <span class="os-label" id="os-label">Quick Install</span>
+            <button class="copy-btn" id="copy-btn" onclick="copyCommand()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span>Copy</span>
+            </button>
+          </div>
+          <pre><code id="command-text">git clone https://github.com/afalcongonzalez/surfmate.io.git && cd surfmate.io && go build -o surfmate.io . && sudo mv surfmate.io /usr/local/bin/</code></pre>
+        </div>
+
+        <div class="hero-buttons">
+          <a href="#setup" class="btn btn-primary">Get Started</a>
+          <a href="https://github.com/afalcongonzalez/surfmate.io" class="btn btn-secondary">View Source</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <div class="container">
+        <div class="section-header">
+          <h2>Built for AI agents</h2>
+          <p>Everything you need for seamless browser automation</p>
+        </div>
+        <div class="feature-grid">
+          <div class="feature">
+            <div class="feature-icon">🔌</div>
+            <h3>MCP Native</h3>
+            <p>First-class Model Context Protocol support. Works out of the box with Claude Desktop and other MCP clients.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">👁</div>
+            <h3>Visible Browser</h3>
+            <p>See what the AI is doing in real-time. Solve captchas and complete logins when needed.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">⚡</div>
+            <h3>Zero Config</h3>
+            <p>Automatically detects Chrome, Edge, or Brave on your system. Just download and run.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">🖥</div>
+            <h3>Cross Platform</h3>
+            <p>Native binaries for macOS (Intel & Apple Silicon), Linux, and Windows.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="install" id="install">
+      <div class="container">
+        <div class="section-header">
+          <h2>Installation</h2>
+          <p>Choose your platform</p>
+        </div>
+
+        <div class="os-tabs">
+          <button class="os-tab active" data-os="macos" onclick="selectOS('macos')">macOS</button>
+          <button class="os-tab" data-os="linux" onclick="selectOS('linux')">Linux</button>
+          <button class="os-tab" data-os="windows" onclick="selectOS('windows')">Windows</button>
+        </div>
+
+        <div class="os-content" id="os-content-macos">
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-dot"></span>
+              <span class="code-dot"></span>
+              <span class="code-dot"></span>
+              <span class="code-title">Terminal</span>
+              <button class="copy-btn small" onclick="copyCode('macos')">Copy</button>
+            </div>
+            <div class="code-content">
+              <code id="code-macos"># Clone and build
+git clone https://github.com/afalcongonzalez/surfmate.io.git
+cd surfmate.io
+go build -o surfmate.io .
+
+# Install globally
+sudo mv surfmate.io /usr/local/bin/
+
+# Verify installation
+surfmate.io --help</code>
+            </div>
+          </div>
+        </div>
+
+        <div class="os-content hidden" id="os-content-linux">
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-dot"></span>
+              <span class="code-dot"></span>
+              <span class="code-dot"></span>
+              <span class="code-title">Terminal</span>
+              <button class="copy-btn small" onclick="copyCode('linux')">Copy</button>
+            </div>
+            <div class="code-content">
+              <code id="code-linux"># Clone and build
+git clone https://github.com/afalcongonzalez/surfmate.io.git
+cd surfmate.io
+go build -o surfmate.io .
+
+# Install globally
+sudo mv surfmate.io /usr/local/bin/
+
+# Verify installation
+surfmate.io --help</code>
+            </div>
+          </div>
+        </div>
+
+        <div class="os-content hidden" id="os-content-windows">
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-dot"></span>
+              <span class="code-dot"></span>
+              <span class="code-dot"></span>
+              <span class="code-title">PowerShell</span>
+              <button class="copy-btn small" onclick="copyCode('windows')">Copy</button>
+            </div>
+            <div class="code-content">
+              <code id="code-windows"># Clone and build
+git clone https://github.com/afalcongonzalez/surfmate.io.git
+cd surfmate.io
+go build -o surfmate.io.exe .
+
+# Move to a folder in your PATH (e.g., C:\Users\YourName\bin)
+# Or add the current directory to your PATH
+
+# Verify installation
+.\surfmate.io.exe --help</code>
+            </div>
+          </div>
+        </div>
+
+        <p class="prereq-note">Requires <a href="https://go.dev/dl/">Go 1.23+</a> and a Chromium-based browser (Chrome, Edge, or Brave)</p>
+      </div>
+    </section>
+
+    <section class="setup" id="setup">
+      <div class="container">
+        <div class="section-header">
+          <h2>Claude Desktop Setup</h2>
+          <p>Add surfmate.io to your Claude Desktop config</p>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h3>Open your Claude Desktop config</h3>
+              <div class="config-paths">
+                <div class="config-path">
+                  <span class="path-label">macOS</span>
+                  <code>~/Library/Application Support/Claude/claude_desktop_config.json</code>
+                </div>
+                <div class="config-path">
+                  <span class="path-label">Windows</span>
+                  <code>%APPDATA%\Claude\claude_desktop_config.json</code>
+                </div>
+                <div class="config-path">
+                  <span class="path-label">Linux</span>
+                  <code>~/.config/Claude/claude_desktop_config.json</code>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h3>Add the MCP server config</h3>
+              <div class="code-block">
+                <div class="code-header">
+                  <span class="code-dot"></span>
+                  <span class="code-dot"></span>
+                  <span class="code-dot"></span>
+                  <span class="code-title">claude_desktop_config.json</span>
+                  <button class="copy-btn small" onclick="copyConfig()">Copy</button>
+                </div>
+                <div class="code-content">
+                  <code id="config-code">{
+  "mcpServers": {
+    "surfmate": {
+      "command": "surfmate.io"
+    }
+  }
+}</code>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <h3>Restart Claude Desktop and start browsing</h3>
+              <div class="example-prompts">
+                <p class="prompt-intro">Try these prompts:</p>
+                <div class="prompt">"Go to news.ycombinator.com and summarize the top 5 stories"</div>
+                <div class="prompt">"Navigate to my email and wait for me to log in"</div>
+                <div class="prompt">"Take a screenshot of the current page"</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>Built by <a href="https://github.com/afalcongonzalez">afalcongonzalez</a></p>
+      <div class="footer-links">
+        <a href="https://github.com/afalcongonzalez/surfmate.io">GitHub</a>
+        <a href="https://github.com/afalcongonzalez/surfmate.io/issues">Issues</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Detect OS
+    function detectOS() {
+      const ua = navigator.userAgent.toLowerCase();
+      const platform = navigator.platform.toLowerCase();
+
+      if (ua.includes('win') || platform.includes('win')) return 'windows';
+      if (ua.includes('mac') || platform.includes('mac')) return 'macos';
+      return 'linux';
+    }
+
+    // OS-specific commands
+    const commands = {
+      macos: 'git clone https://github.com/afalcongonzalez/surfmate.io.git && cd surfmate.io && go build -o surfmate.io . && sudo mv surfmate.io /usr/local/bin/',
+      linux: 'git clone https://github.com/afalcongonzalez/surfmate.io.git && cd surfmate.io && go build -o surfmate.io . && sudo mv surfmate.io /usr/local/bin/',
+      windows: 'git clone https://github.com/afalcongonzalez/surfmate.io.git; cd surfmate.io; go build -o surfmate.io.exe .'
+    };
+
+    const osLabels = {
+      macos: 'macOS',
+      linux: 'Linux',
+      windows: 'Windows (PowerShell)'
+    };
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      const os = detectOS();
+
+      // Update hero install command
+      document.getElementById('os-label').textContent = osLabels[os];
+      document.getElementById('command-text').textContent = commands[os];
+
+      // Select the right tab
+      selectOS(os);
+    });
+
+    function selectOS(os) {
+      // Update tabs
+      document.querySelectorAll('.os-tab').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.os === os);
+      });
+
+      // Update content
+      document.querySelectorAll('.os-content').forEach(content => {
+        content.classList.add('hidden');
+      });
+      document.getElementById('os-content-' + os).classList.remove('hidden');
+    }
+
+    function copyCommand() {
+      const text = document.getElementById('command-text').textContent;
+      navigator.clipboard.writeText(text);
+
+      const btn = document.getElementById('copy-btn');
+      btn.querySelector('span').textContent = 'Copied!';
+      setTimeout(() => {
+        btn.querySelector('span').textContent = 'Copy';
+      }, 2000);
+    }
+
+    function copyCode(os) {
+      const code = document.getElementById('code-' + os).textContent;
+      navigator.clipboard.writeText(code);
+    }
+
+    function copyConfig() {
+      const code = document.getElementById('config-code').textContent;
+      navigator.clipboard.writeText(code);
+    }
+  </script>
+</body>
+</html>

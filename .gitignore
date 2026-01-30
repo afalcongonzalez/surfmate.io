@@ -1,0 +1,35 @@
+# Binaries
+surfmate.io
+surfmate.io.exe
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Build output
+dist/
+tmp/
+build-errors.log
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool
+*.out
+
+# Dependency directories
+vendor/
+
+# Go workspace file
+go.work
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
