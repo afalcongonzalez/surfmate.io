@@ -5,26 +5,43 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+
 jobs:
   release:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-go@v5
         with:
-          go-version: '1.23'
+          go-version: '1.22'
 
-      - name: Build all platforms
-        run: make build-all
+      - name: Build binaries
+        run: |
+          GOOS=darwin GOARCH=arm64 go build -ldflags="-s -w" -o surfmate.io-darwin-arm64
+          GOOS=darwin GOARCH=amd64 go build -ldflags="-s -w" -o surfmate.io-darwin-amd64
+          GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o surfmate.io-linux-amd64
+          GOOS=windows GOARCH=amd64 go build -ldflags="-s -w" -o surfmate.io-windows-amd64.exe
 
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
-          files: dist/*
+          files: |
+            surfmate.io-darwin-arm64
+            surfmate.io-darwin-amd64
+            surfmate.io-linux-amd64
+            surfmate.io-windows-amd64.exe
+            index.html
+            style.css
           generate_release_notes: true
+
+      - name: Deploy to server
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PRIVATE_KEY: ${{ secrets.RUNNER_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          scp -o StrictHostKeyChecking=no index.html style.css afalcongonzalez@71.215.101.10:/home/afalcongonzalez/surfmate.io/

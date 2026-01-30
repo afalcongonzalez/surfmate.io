@@ -25,12 +25,6 @@ func main() {
 	// Create browser manager
 	mgr := browser.GetManager(cfg)
 
-	// Launch browser
-	if err := mgr.Launch(); err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to launch browser: %v\n", err)
-		os.Exit(1)
-	}
-
 	// Handle shutdown
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)

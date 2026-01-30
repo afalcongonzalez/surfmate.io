@@ -1,76 +1,44 @@
 # Surfmate.io
 
-Browser automation MCP server for AI. Opens a visible browser so you can handle captchas and logins while AI controls navigation.
+Let AI browse the web for you. A browser window opens on your screen so you can handle captchas and logins while the AI does everything else.
 
-## Quick Install
+Works with **Claude Desktop** and **ChatGPT**.
+
+## Install
 
 ### macOS (Apple Silicon)
 
 ```bash
-curl -L -o surfmate.io https://github.com/afalcongonzalez/surfmate.io/releases/latest/download/surfmate.io-darwin-arm64
-xattr -d com.apple.quarantine surfmate.io
-chmod +x surfmate.io
-sudo mv surfmate.io /usr/local/bin/
+curl -fsSL https://github.com/afalcongonzalez/surfmate.io/releases/latest/download/surfmate.io-darwin-arm64 -o ~/surfmate.io && chmod +x ~/surfmate.io && sudo mv ~/surfmate.io /usr/local/bin/surfmate.io
 ```
 
 ### macOS (Intel)
 
 ```bash
-curl -L -o surfmate.io https://github.com/afalcongonzalez/surfmate.io/releases/latest/download/surfmate.io-darwin-amd64
-xattr -d com.apple.quarantine surfmate.io
-chmod +x surfmate.io
-sudo mv surfmate.io /usr/local/bin/
+curl -fsSL https://github.com/afalcongonzalez/surfmate.io/releases/latest/download/surfmate.io-darwin-amd64 -o ~/surfmate.io && chmod +x ~/surfmate.io && sudo mv ~/surfmate.io /usr/local/bin/surfmate.io
 ```
 
-### Linux (x64)
+### Linux
 
 ```bash
-curl -L -o surfmate.io https://github.com/afalcongonzalez/surfmate.io/releases/latest/download/surfmate.io-linux-amd64
-chmod +x surfmate.io
-sudo mv surfmate.io /usr/local/bin/
-```
-
-### Linux (ARM64)
-
-```bash
-curl -L -o surfmate.io https://github.com/afalcongonzalez/surfmate.io/releases/latest/download/surfmate.io-linux-arm64
-chmod +x surfmate.io
-sudo mv surfmate.io /usr/local/bin/
+curl -fsSL https://github.com/afalcongonzalez/surfmate.io/releases/latest/download/surfmate.io-linux-amd64 -o ~/surfmate.io && chmod +x ~/surfmate.io && sudo mv ~/surfmate.io /usr/local/bin/surfmate.io
 ```
 
 ### Windows (PowerShell as Admin)
 
 ```powershell
-Invoke-WebRequest -Uri "https://github.com/afalcongonzalez/surfmate.io/releases/latest/download/surfmate.io-windows-amd64.exe" -OutFile "surfmate.io.exe"
-New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\bin"
-Move-Item surfmate.io.exe "$env:USERPROFILE\bin\"
-[Environment]::SetEnvironmentVariable("Path", $env:Path + ";$env:USERPROFILE\bin", "User")
+irm https://github.com/afalcongonzalez/surfmate.io/releases/latest/download/surfmate.io-windows-amd64.exe -OutFile surfmate.io.exe; mkdir -Force "$env:USERPROFILE\bin"; mv surfmate.io.exe "$env:USERPROFILE\bin\"
 ```
 
-### Troubleshooting
-
-**macOS "cannot be opened" error:**
-```bash
-xattr -d com.apple.quarantine surfmate.io
-```
-
-**Windows SmartScreen warning:** Click "More info" → "Run anyway"
-
-## Requirements
-
-- Chromium-based browser (Chrome, Edge, or Brave)
+> **Note:** You'll need your password for the install. On macOS, if you see a security warning, run `xattr -d com.apple.quarantine /usr/local/bin/surfmate.io`. On Windows, click "More info" → "Run anyway" if SmartScreen appears.
 
 ---
 
 ## Setup for Claude Desktop
 
-Add to your Claude Desktop config:
+1. Open Claude Desktop → **Settings** → **Developer** → **Edit Config**
 
-| OS | Config Path |
-|----|-------------|
-| macOS | `~/Library/Application Support/Claude/claude_desktop_config.json` |
-| Windows | `%APPDATA%\Claude\claude_desktop_config.json` |
-| Linux | `~/.config/Claude/claude_desktop_config.json` |
+2. Paste this:
 
 ```json
 {
@@ -82,127 +50,171 @@ Add to your Claude Desktop config:
 }
 ```
 
-Restart Claude Desktop after saving.
+3. Restart Claude Desktop
+
+4. Try asking: *"Open the browser and go to news.ycombinator.com"*
 
 ---
 
-## Setup for Claude Code
+## Setup for ChatGPT
 
-Add to your project's `.claude/settings.json`:
+1. **Start the server** (keep this terminal open):
+   ```bash
+   surfmate.io -http -port 8080
+   ```
 
-```json
-{
-  "mcpServers": {
-    "surfmate": {
-      "command": "surfmate.io"
-    }
-  }
-}
+2. **Make it accessible** with [ngrok](https://ngrok.com/download) (new terminal):
+   ```bash
+   ngrok http 8080
+   ```
+   Copy the `https://` URL it shows.
+
+3. **Add to ChatGPT:**
+   - Go to ChatGPT → Create or edit a GPT
+   - Click **Configure** → **Add actions** → **Create new action**
+   - Click **Import from URL** and paste: `YOUR_NGROK_URL/openapi.yaml`
+   - Save!
+
+4. Try asking: *"Open the browser and navigate to example.com"*
+
+> **Keep both terminals open** while using ChatGPT. The browser appears on your computer so you can handle captchas.
+
+---
+
+## How it works
+
+1. You ask your AI to open the browser
+2. A browser window opens on your screen
+3. The AI controls the browser (clicking, typing, reading)
+4. When there's a login or captcha, the AI waits for you to handle it
+5. You solve it in the browser window, then the AI continues
+
+---
+
+## Example chat sessions
+
+### Basic browsing
+
+```
+You: Open the browser and go to Hacker News
+
+AI: [calls open_browser]
+    Browser launched successfully.
+
+    [calls navigate with url="https://news.ycombinator.com"]
+    Navigated to: https://news.ycombinator.com/
+    Title: Hacker News
+    Captcha detected: false
+
+    I've opened Hacker News. I can see the front page with today's top stories.
+```
+
+### Searching and extracting content
+
+```
+You: Open a browser, search Wikipedia for "artificial intelligence" and
+     give me the first paragraph
+
+AI: [calls open_browser]
+    Browser launched successfully.
+
+    [calls navigate with url="https://wikipedia.org"]
+    Navigated to: https://www.wikipedia.org/
+
+    [calls type with selector="input[name='search']", text="artificial intelligence", submit=true]
+    Typed text and submitted.
+
+    [calls extract_text with selector=".mw-parser-output p"]
+    "Artificial intelligence (AI), in its broadest sense, is intelligence
+    exhibited by machines..."
+
+    Here's the first paragraph from the Wikipedia article on AI: ...
+```
+
+### Handling logins
+
+```
+You: Go to my email and wait for me to log in
+
+AI: [calls open_browser]
+    Browser launched successfully.
+
+    [calls navigate with url="https://gmail.com"]
+    Navigated to: https://accounts.google.com/...
+    Captcha detected: false
+
+    I've opened Gmail. Please log in to your account in the browser window.
+    Let me know when you're done.
+
+You: Ok I'm logged in
+
+AI: [calls get_page_content]
+    "Primary inbox - 3 unread messages..."
+
+    I can see your inbox now. You have 3 unread messages. Would you like
+    me to summarize them?
+```
+
+### Taking screenshots
+
+```
+You: Open a browser, go to example.com and take a screenshot
+
+AI: [calls open_browser]
+    Browser launched successfully.
+
+    [calls navigate with url="https://example.com"]
+    Navigated to: https://example.com/
+    Title: Example Domain
+
+    [calls screenshot]
+    [returns base64 image]
+
+    Here's a screenshot of example.com. It shows the default example domain
+    page with a heading and a link to more information.
+```
+
+### Solving captchas
+
+```
+You: Search Google for "best pizza near me"
+
+AI: [calls open_browser]
+    Browser launched successfully.
+
+    [calls navigate with url="https://google.com"]
+    Navigated to: https://google.com/
+    Captcha detected: true
+
+    I see there's a captcha on the page. Please solve it in the browser
+    window, and I'll continue once you're done.
+
+    [calls wait_for_user with reason="Solve captcha"]
+    User completed action.
+
+    [calls type with selector="input[name='q']", text="best pizza near me", submit=true]
+    Typed text and submitted.
+
+    I've searched for "best pizza near me". Here are the results...
 ```
 
 ---
 
-## Setup for ChatGPT (via ngrok)
+## Troubleshooting
 
-### 1. Start surfmate.io in HTTP mode
-
+**macOS says the app can't be opened:**
+The install command handles this, but if needed:
 ```bash
-surfmate.io -http -port 8080
+xattr -d com.apple.quarantine /usr/local/bin/surfmate.io
 ```
 
-### 2. Expose with ngrok
+**Windows SmartScreen warning:**
+Click "More info" → "Run anyway"
 
-Install [ngrok](https://ngrok.com/download) if you haven't, then in a new terminal:
-
-```bash
-ngrok http 8080
-```
-
-Copy the HTTPS URL (e.g., `https://abc123.ngrok.io`)
-
-### 3. Create a ChatGPT Action
-
-1. Go to [chat.openai.com](https://chat.openai.com) and open a GPT you can edit (or create one)
-2. Click **Configure** → **Create new action**
-3. For the schema, click "Import from URL" and enter: `YOUR_NGROK_URL/openapi.yaml`
-4. Set Authentication to **None**
-5. Save and test!
-
-### 4. Use it
-
-Ask ChatGPT things like:
-- "Navigate to https://example.com and tell me what you see"
-- "Go to Wikipedia and search for 'artificial intelligence'"
-
-> **Tip:** Keep both terminal windows open. The browser appears on your machine so you can solve captchas.
+**Browser doesn't open:**
+Make sure you have Chrome, Edge, or Brave installed.
 
 ---
-
-## Usage Examples
-
-Once configured, ask your AI:
-
-- "Navigate to https://example.com and take a screenshot"
-- "Search for 'MCP protocol' on Google and extract the results"
-- "Go to my email and wait for me to log in"
-
----
-
-## MCP Tools
-
-| Tool | Description |
-|------|-------------|
-| `navigate(url)` | Navigate to URL, returns title and captcha status |
-| `click(selector)` | Click element by CSS selector or XPath |
-| `type(selector, text, submit?)` | Type into input, optionally press Enter |
-| `scroll(direction?, amount?, selector?)` | Scroll page or element into view |
-| `get_page_content(include_html?)` | Get page text or HTML |
-| `screenshot(full_page?, selector?, quality?)` | Capture as base64 PNG |
-| `extract_text(selector, multiple?)` | Extract text from elements |
-| `wait_for_user(reason?, timeout?)` | Pause for captcha/login resolution |
-
----
-
-## Environment Variables
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `BROWSER_PATH` | auto-detect | Path to browser binary |
-| `BROWSER_TIMEOUT` | `30s` | Operation timeout |
-| `VIEWPORT_WIDTH` | `1280` | Browser viewport width |
-| `VIEWPORT_HEIGHT` | `800` | Browser viewport height |
-| `HEADLESS` | `false` | Run in headless mode |
-
----
-
-## Build from Source
-
-Requires [Go 1.23+](https://go.dev/dl/)
-
-```bash
-git clone https://github.com/afalcongonzalez/surfmate.io.git
-cd surfmate.io
-go build -o surfmate.io .
-sudo mv surfmate.io /usr/local/bin/
-```
-
----
-
-## Development
-
-```bash
-# Run locally
-go run ./main.go
-
-# HTTP mode
-go run ./main.go -http -port 8080
-
-# Build all platforms
-make build-all
-
-# Docker (headless)
-make docker-dev
-```
 
 ## License
 

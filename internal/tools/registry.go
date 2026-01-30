@@ -7,6 +7,9 @@ import (
 
 // RegisterAll registers all browser tools with the MCP server
 func RegisterAll(s *server.MCPServer, mgr *browser.Manager) {
+	// Browser lifecycle
+	s.AddTool(OpenBrowserTool(), OpenBrowserHandler(mgr))
+
 	// Navigation
 	s.AddTool(NavigateTool(), NavigateHandler(mgr))
 
