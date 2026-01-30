@@ -119,14 +119,20 @@ header .container {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 14px;
+  padding: 8px 16px;
   background: rgba(59, 130, 246, 0.1);
   border: 1px solid rgba(59, 130, 246, 0.2);
   border-radius: 100px;
-  font-size: 0.8125rem;
-  font-weight: 500;
+  font-size: 0.875rem;
+  font-weight: 600;
   color: var(--accent);
   margin-bottom: 24px;
+  transition: all 0.15s;
+}
+
+.badge:hover {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: rgba(59, 130, 246, 0.4);
 }
 
 .hero h1 {
@@ -152,44 +158,63 @@ header .container {
   line-height: 1.7;
 }
 
-/* Install Command Box */
-.install-command {
-  max-width: 720px;
-  margin: 0 auto 32px;
+/* Install Box */
+.install-box {
+  max-width: 800px;
+  margin: 0 auto 16px;
   background: #0c0c0e;
   border: 1px solid var(--border);
   border-radius: 12px;
   overflow: hidden;
 }
 
-.command-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.install-header {
   padding: 10px 16px;
   background: var(--bg-subtle);
   border-bottom: 1px solid var(--border);
 }
 
-.os-label {
+.install-label {
   font-size: 0.8125rem;
   font-weight: 500;
   color: var(--text-muted);
 }
 
+.install-content {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  gap: 12px;
+}
+
+.install-content code {
+  flex: 1;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: #4ade80;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
+.install-hint {
+  text-align: center;
+  color: var(--text-subtle);
+  font-size: 0.8125rem;
+  margin-bottom: 24px;
+}
+
 .copy-btn {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
+  justify-content: center;
+  padding: 8px;
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 6px;
   color: var(--text-muted);
-  font-size: 0.8125rem;
-  font-weight: 500;
   cursor: pointer;
   transition: all 0.15s;
+  flex-shrink: 0;
 }
 
 .copy-btn:hover {
@@ -201,20 +226,6 @@ header .container {
 .copy-btn.small {
   padding: 4px 10px;
   font-size: 0.75rem;
-}
-
-.install-command pre {
-  margin: 0;
-  padding: 16px;
-  overflow-x: auto;
-}
-
-.install-command code {
-  font-family: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
-  font-size: 0.8125rem;
-  color: #22c55e;
-  white-space: pre-wrap;
-  word-break: break-all;
 }
 
 .hero-buttons {
@@ -442,6 +453,51 @@ header .container {
 
 .no-release a {
   color: var(--accent);
+}
+
+.os-note {
+  margin-top: 12px;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+}
+
+.all-downloads {
+  margin-top: 48px;
+  text-align: center;
+}
+
+.downloads-label {
+  font-size: 0.8125rem;
+  color: var(--text-subtle);
+  margin-bottom: 12px;
+}
+
+.download-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.download-link {
+  padding: 8px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.8125rem;
+  transition: all 0.15s;
+}
+
+.download-link:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.step-desc.alt {
+  margin-top: 16px;
+  font-size: 0.8125rem;
 }
 
 /* Notes/Warnings */
@@ -783,6 +839,30 @@ header .container {
 
 .prompt:last-child {
   margin-bottom: 0;
+}
+
+/* Help section */
+.help-section {
+  margin-top: 48px;
+  padding: 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.help-section p {
+  color: var(--text-muted);
+  font-size: 0.9375rem;
+}
+
+.help-section a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.help-section a:hover {
+  text-decoration: underline;
 }
 
 /* Footer */

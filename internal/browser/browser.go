@@ -84,6 +84,13 @@ func (m *Manager) Launch() error {
 	return nil
 }
 
+// IsLaunched returns true if the browser is running
+func (m *Manager) IsLaunched() bool {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	return m.browser != nil
+}
+
 // Close shuts down the browser
 func (m *Manager) Close() error {
 	m.mu.Lock()

@@ -42,6 +42,7 @@ func (s *HTTPServer) Start() error {
 	mux.HandleFunc("GET /", s.handleRoot)
 
 	// Browser tools
+	mux.HandleFunc("POST /open_browser", s.handleOpenBrowser)
 	mux.HandleFunc("POST /navigate", s.handleNavigate)
 	mux.HandleFunc("POST /click", s.handleClick)
 	mux.HandleFunc("POST /type", s.handleType)
@@ -86,6 +87,20 @@ func (s *HTTPServer) handleRoot(w http.ResponseWriter, r *http.Request) {
 func (s *HTTPServer) handleOpenAPI(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/yaml")
 	w.Write([]byte(openAPISpec))
+}
+
+func (s *HTTPServer) handleOpenBrowser(w http.ResponseWriter, r *http.Request) {
+	if s.mgr.IsLaunched() {
+		jsonResponse(w, map[string]string{"status": "already_open", "message": "Browser is already open."})
+		return
+	}
+
+	if err := s.mgr.Launch(); err != nil {
+		errorResponse(w, http.StatusInternalServerError, fmt.Sprintf("failed to launch browser: %v", err))
+		return
+	}
+
+	jsonResponse(w, map[string]string{"status": "launched", "message": "Browser launched successfully."})
 }
 
 // NavigateRequest is the request body for /navigate
@@ -310,6 +325,25 @@ info:
 servers:
   - url: http://localhost:8080
 paths:
+  /open_browser:
+    post:
+      operationId: openBrowser
+      summary: Open the browser
+      description: Launches the browser window. Must be called before using any other browser tools.
+      responses:
+        '200':
+          description: Browser opened
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [launched, already_open]
+                  message:
+                    type: string
+
   /navigate:
     post:
       operationId: navigate
